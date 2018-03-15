@@ -99,7 +99,7 @@ strWMI = strWMI & vbCr & "Operating System Details" & vbCr
 
 For Each objComputer in colSettingsOS
 	strWMI = strWMI & _ 
-	"   Windows Version " & vbTab & ": " & objComputer.Caption & ", " & objComputer.CSDVersion & VbCr & _ 
+	"   OS Version " & vbTab & ": " & objComputer.Caption & ", " & objComputer.CSDVersion & VbCr & _ 
 	"   Version " & VbTab & ": " & objComputer.Version & VbCr & _ 
 	"   Install Date " & VbTab & ": " & WMIDateStringToDate(objComputer.InstallDate) & VbCr & _ 
 	"   Windows Folder" & vbTab & ": " & objComputer.WindowsDirectory & VbCr
