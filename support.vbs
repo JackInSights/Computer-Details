@@ -100,7 +100,7 @@ strWMI = strWMI & vbCr & "Operating System Details" & vbCr
 For Each objComputer in colSettingsOS
 	strWMI = strWMI & _ 
 	"   Windows Version " & vbTab & ": " & objComputer.Caption & ", " & objComputer.CSDVersion & VbCr & _ 
-	"   Version " & VbTab & VbTab & ": " & objComputer.Version & VbCr & _ 
+	"   Version " & VbTab & ": " & objComputer.Version & VbCr & _ 
 	"   Install Date " & VbTab & ": " & WMIDateStringToDate(objComputer.InstallDate) & VbCr & _ 
 	"   Windows Folder" & vbTab & ": " & objComputer.WindowsDirectory & VbCr
 Next
@@ -120,7 +120,7 @@ For Each ObjVDU in colSettingsVDU
 	If objVDU.MonitorManufacturer <> "" Then
 		strWMI = strWMI & VbCr & _
 		"   Monitor " & MonNo & VbCr & _
-		"      Make " & vbTab & vbTab & ": " & objVDU.MonitorManufacturer & VbCr & _
+		"      Make " & vbTab & ": " & objVDU.MonitorManufacturer & VbCr & _
 		"      Description" & vbTab & ": " & objVDU.Description & VbCr & _
 		"      Resolution" & vbTab & ": " & objVDU.ScreenWidth & " x " & objVDU.ScreenHeight & VbCr
 		MonNo = MonNo + 1
@@ -137,7 +137,7 @@ For Each objComputer in colSettingsBios
 	strWMI = strWMI & _ 
 	"   Serial Number " & VbTab & ": " & objComputer.SerialNumber & VbCr & _ 
 	"   Manufacturer " & VbTab & ": " & objComputer.Manufacturer & VbCr & _ 
-	"   Version " & VbTab & VbTab & ": " & objComputer.Version
+	"   Version " & VbTab & ": " & objComputer.Version
 Next
 
 ''wscript.echo strWMI
