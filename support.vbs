@@ -1,42 +1,44 @@
-'  VB Script to display computer details
+' VB Script to display computer details
+' Created by Jack Henry
+' https://github.com/MetalH47K/
 
 On Error Resume Next
 
 ' Define Local Variables
 ' ######################
 
-Dim objWMI
-Dim colSettingsComp
-Dim colSettingsOS
-Dim colSettingsBios
-Dim objComputer
-Dim strWMI
+Dim getWMI_obj
+Dim getCompSettings
+Dim getOSSettings
+Dim getBIOSSettings
+Dim getComputer
+Dim getWMI_str
 Dim HeadlineInfo
-Dim ipNo
-Dim MonNo
+Dim ipNum
+Dim monNum
 
 Const vbLongDate = 1
 
 
 ' # Define queries
 ' #################
-'Set objWMI = GetObject("winmgmts:")
+'Set getWMI_obj = GetObject("winmgmts:")
 
-Set objWMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
+Set getWMI_obj = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
 
-Set colSettingsComp = objWMI.ExecQuery ("Select * from Win32_ComputerSystem")
-Set colSettingsOS   = objWMI.ExecQuery ("Select * from Win32_OperatingSystem")
-Set colSettingsBios = objWMI.ExecQuery ("Select * from Win32_BIOS")
-Set IPConfigSet     = objWMI.ExecQuery ("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled=TRUE")
-Set colSettingsCPU  = objWMI.ExecQuery ("select ProcessorId, MaxClockSpeed from Win32_Processor")
-Set colSettingsGPU  = objWMI.ExecQuery ("select Caption, Description, DeviceName from Win32_DisplayConfiguration")
-Set colSettingsVDU  = objWMI.ExecQuery ("select Caption, Description, DeviceID, DisplayType, MonitorManufacturer, MonitorType, Name, PNPDeviceID, ScreenHeight, ScreenWidth from Win32_DesktopMonitor")
+Set getCompSettings = getWMI_obj.ExecQuery ("Select * from Win32_ComputerSystem")
+Set getOSSettings   = getWMI_obj.ExecQuery ("Select * from Win32_OperatingSystem")
+Set getBIOSSettings = getWMI_obj.ExecQuery ("Select * from Win32_BIOS")
+Set IPConfigSet     = getWMI_obj.ExecQuery ("Select IPAddress from Win32_NetworkAdapterConfiguration where IPEnabled=TRUE")
+Set colSettingsCPU  = getWMI_obj.ExecQuery ("select ProcessorId, MaxClockSpeed from Win32_Processor")
+Set colSettingsGPU  = getWMI_obj.ExecQuery ("select Caption, Description, DeviceName from Win32_DisplayConfiguration")
+Set colSettingsVDU  = getWMI_obj.ExecQuery ("select Caption, Description, DeviceID, DisplayType, MonitorManufacturer, MonitorType, Name, PNPDeviceID, ScreenHeight, ScreenWidth from Win32_DesktopMonitor")
 
-Set colSettingsCompProd = objWMI.ExecQuery ("Select * from Win32_ComputerSystemProduct")
+Set getCompSettingsProd = getWMI_obj.ExecQuery ("Select * from Win32_ComputerSystemProduct")
 
 ' # Get the UUID Details
 ' ##################################
-'For Each objItem in colSettingsCompProd
+'For Each objItem in getCompSettingsProd
 '	msgbox objItem.caption & ", " & objItem.description & ", " & objItem.name & ", " & objItem.skunumber & ", " & objItem.vendor & ", " & objItem.version & ", " & objItem.uuid
 'Next
 
@@ -44,27 +46,27 @@ Set colSettingsCompProd = objWMI.ExecQuery ("Select * from Win32_ComputerSystemP
 ' # Start the Main support Details
 ' ##################################
 
-HeadlineInfo = "Main Support Details" & VbCr & "********************" & VbCr
+HeadlineInfo = "Main Support Details" & VbCr & VbCr & "****************************************" & vbCr & "Created by Jack Henry | https://github.com/MetalH47K/" & VbCr & VbCr & VbCr
 
 
-For Each objItem in colSettingsComp
+For Each objItem in getCompSettings
 	HeadlineInfo = HeadlineInfo & "Computer Name " & VbTab & ": " & objItem.Name & VbCr
 	HeadlineInfo = HeadlineInfo & "User Name " & VbTab & ": " & objItem.UserName & VbCr
 Next
 
 
-ipNo = 0
+ipNum = 0
 For Each IPConfig in IPConfigSet
-	ipNo = ipNo + 1
+	ipNum = ipNum + 1
 	If Not IsNull(IPConfig.IPAddress) Then
 		For i=LBound(IPConfig.IPAddress) to UBound(IPConfig.IPAddress)
-			HeadlineInfo = HeadlineInfo & "IP Address (" & ipNo & ")" & vbTab & ": " & IPConfig.IPAddress(i) & VbCr
+			HeadlineInfo = HeadlineInfo & "IP Address (" & ipNum & ")" & vbTab & ": " & IPConfig.IPAddress(i) & VbCr
 		Next
 	End If
 Next
 
 
-For Each objOS in colSettingsOS
+For Each objOS in getOSSettings
     dtmBootup = objOS.LastBootUpTime
     dtmLastBootUpTime = WMIDateStringToDate(dtmBootup)
     dtmSystemUptime = DateDiff("h", dtmLastBootUpTime, Now)
@@ -77,16 +79,16 @@ HeadlineInfo = HeadlineInfo & "Uptime (in hours) " & VbTab & ": " & dtmSystemUpt
 ' # Start the Computer Details Code
 ' ##################################
 
-strWMI = HeadlineInfo & vbCr & "Computer Details" & vbCr
+getWMI_str = HeadlineInfo & vbCr & "Computer Details" & vbCr
 
-For Each objComputer in colSettingsComp
-	strWMI = strWMI & _ 
-	"   Manufacturer " & VbTab & ": " & objComputer.Manufacturer & VbCr & _ 
-	"   Model " & VbTab & VbTab & ": " & objComputer.Model & VbCr & _ 
-	"   Memory " & VbTab & ": " & round (objComputer.TotalPhysicalMemory / 1024 / 1024,0) & " MB" & VbCr
+For Each getComputer in getCompSettings
+	getWMI_str = getWMI_str & _ 
+	"   Manufacturer " & VbTab & ": " & getComputer.Manufacturer & VbCr & _ 
+	"   Model " & VbTab & VbTab & ": " & getComputer.Model & VbCr & _ 
+	"   Memory " & VbTab & ": " & round (getComputer.TotalPhysicalMemory / 1024 / 1024,0) & " MB" & VbCr
 	CPUNo = 1
 	For Each ObjCPU in colSettingsCPU
-		strWMI = strWMI & "   Processor " & CPUNo & VbTab & ": " & objCPU.MaxClockSpeed & " Mhz" & VbCr
+		getWMI_str = getWMI_str & "   Processor " & CPUNo & VbTab & ": " & objCPU.MaxClockSpeed & " Mhz" & VbCr
 		CPUNo = CPUNo + 1	
 	Next
 Next
@@ -95,35 +97,35 @@ Next
 ' # Start the OS Details Code
 ' ##################################
 
-strWMI = strWMI & vbCr & "Operating System Details" & vbCr
+getWMI_str = getWMI_str & vbCr & "Operating System Details" & vbCr
 
-For Each objComputer in colSettingsOS
-	strWMI = strWMI & _ 
-	"   OS Version " & vbTab & ": " & objComputer.Caption & ", " & objComputer.CSDVersion & VbCr & _ 
-	"   Version " & VbTab & ": " & objComputer.Version & VbCr & _ 
-	"   Install Date " & VbTab & ": " & WMIDateStringToDate(objComputer.InstallDate) & VbCr & _ 
-	"   Windows Folder" & vbTab & ": " & objComputer.WindowsDirectory & VbCr
+For Each getComputer in getOSSettings
+	getWMI_str = getWMI_str & _ 
+	"   OS Version " & vbTab & ": " & getComputer.Caption & ", " & getComputer.CSDVersion & VbCr & _ 
+	"   Version " & VbTab & ": " & getComputer.Version & VbCr & _ 
+	"   Install Date " & VbTab & ": " & WMIDateStringToDate(getComputer.InstallDate) & VbCr & _ 
+	"   Windows Folder" & vbTab & ": " & getComputer.WindowsDirectory & VbCr
 Next
 
 ' # Start the Graphics Details Code
 ' ##################################
 
-strWMI = strWMI & vbCr & "Graphics Card Details" & vbCr
+getWMI_str = getWMI_str & vbCr & "Graphics Card Details" & vbCr
 
 For Each ObjGPU in colSettingsGPU
-	strWMI = strWMI & _ 
+	getWMI_str = getWMI_str & _ 
 	"   Graphics Card " & vbTab & ": " & objGPU.Description & VbCr
 Next
 
-MonNo = 1
+monNum = 1
 For Each ObjVDU in colSettingsVDU
 	If objVDU.MonitorManufacturer <> "" Then
-		strWMI = strWMI & VbCr & _
-		"   Monitor " & MonNo & VbCr & _
+		getWMI_str = getWMI_str & VbCr & _
+		"   Monitor " & monNum & VbCr & _
 		"      Make " & vbTab & ": " & objVDU.MonitorManufacturer & VbCr & _
 		"      Description" & vbTab & ": " & objVDU.Description & VbCr & _
 		"      Resolution" & vbTab & ": " & objVDU.ScreenWidth & " x " & objVDU.ScreenHeight & VbCr
-		MonNo = MonNo + 1
+		monNum = monNum + 1
 	End If
 Next
 
@@ -131,18 +133,16 @@ Next
 ' # Start the BIOS Details Code
 ' ##################################
 
-strWMI = strWMI & vbCr & "BIOS Details" & vbCr
+getWMI_str = getWMI_str & vbCr & "BIOS Details" & vbCr
 
-For Each objComputer in colSettingsBios
-	strWMI = strWMI & _ 
-	"   Serial Number " & VbTab & ": " & objComputer.SerialNumber & VbCr & _ 
-	"   Manufacturer " & VbTab & ": " & objComputer.Manufacturer & VbCr & _ 
-	"   Version " & VbTab & ": " & objComputer.Version
+For Each getComputer in getBIOSSettings
+	getWMI_str = getWMI_str & _ 
+	"   Serial Number " & VbTab & ": " & getComputer.SerialNumber & VbCr & _ 
+	"   Manufacturer " & VbTab & ": " & getComputer.Manufacturer & VbCr & _ 
+	"   Version " & VbTab & ": " & getComputer.Version
 Next
 
-''wscript.echo strWMI
-
-MsgBox strWMI,64,"Computer Support Information"
+MsgBox getWMI_str,64,"Computer Support Information"
 
 Function WMIDateStringToDate(dtmBootup)
     WMIDateStringToDate =  _
