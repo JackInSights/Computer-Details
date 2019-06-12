@@ -1,6 +1,6 @@
 ' VB Script to display computer details
 ' Created by Jack Henry
-' https://github.com/MetalH47K/
+' https://github.com/JackInSights/
 
 On Error Resume Next
 
