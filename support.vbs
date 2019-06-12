@@ -55,15 +55,15 @@ For Each objItem in getCompSettings
 Next
 
 
-ipNum = 0
-For Each IPConfig in IPConfigSet
-	ipNum = ipNum + 1
-	If Not IsNull(IPConfig.IPAddress) Then
-		For i=LBound(IPConfig.IPAddress) to UBound(IPConfig.IPAddress)
-			HeadlineInfo = HeadlineInfo & "IP Address (" & ipNum & ")" & vbTab & ": " & IPConfig.IPAddress(i) & VbCr
-		Next
-	End If
-Next
+'ipNum = 0
+'For Each IPConfig in IPConfigSet
+'	ipNum = ipNum + 1
+'	If Not IsNull(IPConfig.IPAddress) Then
+'		For i=LBound(IPConfig.IPAddress) to UBound(IPConfig.IPAddress)
+'			HeadlineInfo = HeadlineInfo & "IP Address (" & ipNum & ")" & vbTab & ": " & IPConfig.IPAddress(i) & VbCr
+'		Next
+'	End If
+'Next
 
 
 For Each objOS in getOSSettings
