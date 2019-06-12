@@ -46,7 +46,7 @@ Set getCompSettingsProd = getWMI_obj.ExecQuery ("Select * from Win32_ComputerSys
 ' # Start the Main support Details
 ' ##################################
 
-HeadlineInfo = "Main Support Details" & VbCr & VbCr & "****************************************" & vbCr & "Created by Jack Henry | https://github.com/MetalH47K/" & VbCr & VbCr & VbCr
+HeadlineInfo = "Main Support Details" & VbCr & VbCr & "****************************************" & vbCr & "Created by Jack Henry | https://github.com/JackInSights/" & VbCr & VbCr & VbCr
 
 
 For Each objItem in getCompSettings
@@ -89,7 +89,7 @@ For Each getComputer in getCompSettings
 	CPUNo = 1
 	For Each ObjCPU in colSettingsCPU
 		getWMI_str = getWMI_str & "   Processor " & CPUNo & VbTab & ": " & objCPU.MaxClockSpeed & " Mhz" & VbCr
-		CPUNo = CPUNo + 1	
+						CPUNo = CPUNo + 1	'Doesn't seem to be pulling the CPU
 	Next
 Next
 
